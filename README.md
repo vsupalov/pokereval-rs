@@ -1,6 +1,6 @@
 #holdem-rs
 
-An implementation of a [poker hand evaluator](http://suffecool.net/poker/evaluator.html) by Kevin Suffecool (aka Cactus Kev) with optimizations based on Paul D. Senzee's [Optimized Hand Evaluator](http://www.paulsenzee.com/2006/06/some-perfect-hash.html) in Rust.
+A Rust library, implementating a poker hand evaluator. Based on [the original work](http://suffecool.net/poker/evaluator.html) of by Kevin Suffecool (aka Cactus Kev) and additional optimizations by Paul D. Senzee's [Optimized Hand Evaluator](http://www.paulsenzee.com/2006/06/some-perfect-hash.html).
 
 The crate is called `pokereval` and you can depend on it via cargo:
 
