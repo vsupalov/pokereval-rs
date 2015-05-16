@@ -3,8 +3,8 @@ extern crate holdem;
 
 mod types;
 mod lookups;
-mod original;
-mod perfect;
+pub mod original;
+pub mod perfect;
 pub mod utils;
 
 use cards::card::{Card};

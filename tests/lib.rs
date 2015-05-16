@@ -3,8 +3,11 @@ extern crate cards;
 extern crate pokereval;
 
 use cards::card::{Card, Value, Suit};
+//use cards::deck::{Deck};
+
 use holdem::{HandRankClass};
 use pokereval::utils::{hand_rank};
+//use pokereval::{original, perfect}; // two evaluation methods
 
 use holdem::{HandCards, CommunityCards, CardSlot};
 
@@ -76,3 +79,24 @@ fn get_rank_of_hand_and_community_cards_panic() {
     let rank = pokereval::eval_for_player(&hand, &community);
     assert_eq!(hand_rank(rank), HandRankClass::FourOfAKind);
 }
+
+//TODO: as soon as both methods are expected to agree
+/*
+#[test]
+fn both_evaluation_methods_agree() {
+    let mut deck = Deck::new();
+
+    // try on 10 hands
+    for i in 0..10 {
+        let c1 = deck.draw();
+        let c2 = deck.draw();
+        let c3 = deck.draw();
+        let c4 = deck.draw();
+        let c5 = deck.draw();
+        
+        let rank_original = original::eval_5cards([&c1, &c2, &c3, &c4, &c5]);
+        let rank_perfect = perfect::eval_5cards([&c1, &c2, &c3, &c4, &c5]);
+        assert_eq!(rank_original, rank_perfect);
+    }
+}
+*/
