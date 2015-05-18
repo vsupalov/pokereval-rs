@@ -1,30 +1,6 @@
 use super::lookups;
-use super::{HandRank};
 use super::types::{InternalCardRepresentation};
-use holdem::{HandRankClass};
 use cards::card::{Card, Value, Suit};
-
-pub fn hand_rank(val: HandRank) -> HandRankClass {
-    if val > 6185 {
-        return HandRankClass::HighCard        // 1277 high card
-    } else if val > 3325 {
-        return HandRankClass::OnePair         // 2860 one pair
-    } else if val > 2467 {
-        return HandRankClass::TwoPair         //  858 two pair
-    } else if val > 1609 {
-        return HandRankClass::ThreeOfAKind    //  858 three-kind
-    } else if val > 1599 {
-        return HandRankClass::Straight        //   10 straights
-    } else if val > 322 {
-        return HandRankClass::Flush           // 1277 flushes
-    } else if val > 166 {
-        return HandRankClass::FullHouse       //  156 full house
-    } else if val > 10 {
-        return HandRankClass::FourOfAKind     //  156 four-kind
-    } else {
-        HandRankClass::StraightFlush          //   10 straight-flushes
-    }
-}
 
 //   +--------+--------+--------+--------+
 //   |xxxbbbbb|bbbbbbbb|cdhsrrrr|xxpppppp|
