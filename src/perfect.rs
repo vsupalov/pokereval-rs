@@ -70,3 +70,36 @@ pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
 
     best
 }
+
+// these two guys only work by accident
+/*
+#[test]
+fn get_rank_of_5_perfect() {
+    let c1 = Card(Value::Two, Suit::Spades);
+    let c2 = Card(Value::Two, Suit::Hearts);
+    let c3 = Card(Value::Two, Suit::Diamonds);
+    let c4 = Card(Value::Two, Suit::Clubs);
+    let c5 = Card(Value::Three, Suit::Hearts);
+
+    let cards = [&c1, &c2, &c3, &c4, &c5];
+    let rank = perfect::eval_5cards(cards);
+
+    assert_eq!(hand_rank(rank), HandRankClass::FourOfAKind);
+}
+
+#[test]
+fn get_rank_of_7_perfect() {
+    let c1 = Card(Value::Two, Suit::Spades);
+    let c2 = Card(Value::Two, Suit::Hearts);
+    let c3 = Card(Value::Two, Suit::Diamonds);
+    let c4 = Card(Value::Two, Suit::Clubs);
+    let c5 = Card(Value::Three, Suit::Hearts);
+    let c6 = Card(Value::Three, Suit::Diamonds);
+    let c7 = Card(Value::Three, Suit::Clubs);
+
+    let cards = [&c1, &c2, &c3, &c4, &c5, &c6, &c7];
+    let rank = perfect::eval_7cards(cards);
+
+    assert_eq!(hand_rank(rank), HandRankClass::FourOfAKind);
+}
+*/

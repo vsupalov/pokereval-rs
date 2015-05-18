@@ -58,3 +58,28 @@ pub fn hand_rank(val: HandRank) -> HandRankClass {
         HandRankClass::StraightFlush          //   10 straight-flushes
     }
 }
+
+//use cards::deck::{Deck};
+//use pokereval::{original, perfect}; // two evaluation methods
+
+/*
+//TODO: as soon as both methods are expected to agree
+// this guy does not always pass
+#[test]
+fn both_evaluation_methods_agree() {
+    let mut deck = Deck::new();
+
+    // try on 10 hands
+    for _ in 0..10 {
+        let c1 = deck.draw();
+        let c2 = deck.draw();
+        let c3 = deck.draw();
+        let c4 = deck.draw();
+        let c5 = deck.draw();
+
+        let rank_original = original::eval_5cards([&c1, &c2, &c3, &c4, &c5]);
+        let rank_perfect = perfect::eval_5cards([&c1, &c2, &c3, &c4, &c5]);
+        assert_eq!(rank_original, rank_perfect);
+    }
+}
+*/
