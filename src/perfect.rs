@@ -25,11 +25,11 @@ pub fn find_fast(something: usize) -> usize {
 }
 
 pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
-    let c1 = card_to_deck_number(cards[0]) as i32;
-    let c2 = card_to_deck_number(cards[1]) as i32;
-    let c3 = card_to_deck_number(cards[2]) as i32;
-    let c4 = card_to_deck_number(cards[3]) as i32;
-    let c5 = card_to_deck_number(cards[4]) as i32;
+    let c1 = card_to_deck_number(cards[0]);
+    let c2 = card_to_deck_number(cards[1]);
+    let c3 = card_to_deck_number(cards[2]);
+    let c4 = card_to_deck_number(cards[3]);
+    let c5 = card_to_deck_number(cards[4]);
 
     let q : usize = ((c1 | c2 | c3 | c4 | c5) as usize) >> 16;
 
