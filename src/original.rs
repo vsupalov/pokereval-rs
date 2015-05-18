@@ -1,16 +1,9 @@
-use std::collections::{HashMap};
-
 use super::{lookups};
-use super::{hand_rank};
 
 use cards::card::{Card};
-use cards::deck::{Deck};
 
 use super::{HandRank};
-use super::types::{InternalCardRepresentation};
 use super::utils::{card_to_deck_number};
-
-use holdem::{HandRankClass};
 
 fn findit(key: usize) -> usize {
     let mut low = 0;
@@ -77,60 +70,75 @@ pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
     best
 }
 
-#[test]
-fn evaluate_all_possible_5_card_combinations() {
-    let mut deck = Deck::new();
-    let mut cards : Vec<Card> = Vec::new();
+#[cfg(test)]
+mod tests {
+    use std::collections::{HashMap};
 
-    // this could be made faster, by creating a function that works on raw-card-representations and translating
-    // the deck cards into it
-    for _ in 0..52 {
-        let card = deck.draw();
-        cards.push(card);
-    }
+    use cards::deck::{Deck};
+    use cards::card::{Card};
+    use holdem::{HandRankClass};
 
-    //let mut rank_class_count : HashMap<HandRankClass, usize> = HashMap::new();
-    //let mut rank_count : HashMap<HandRank, bool> = HashMap::new();
+    use super::super::{hand_rank}; //TODO this is kind of ugly
+    use super::super::{HandRank};
 
-    // 2,598,960 unique poker hands
-    for i1 in 0..52 {
-        for i2 in (i1+1)..52 {
-            for i3 in (i2+1)..52 {
-                for i4 in (i3+1)..52 {
-                    for i5 in (i4+1)..52 {
-                        let c1 = &cards[i1];
-                        let c2 = &cards[i2];
-                        let c3 = &cards[i3];
-                        let c4 = &cards[i4];
-                        let c5 = &cards[i5];
+    use super::{eval_5cards};
 
-                        let rank = eval_5cards([c1, c2, c3, c4, c5]);
-                        let rank_class = hand_rank(rank); //TODO: is this a move?
-
-                        //rank_count.insert(rank, true);
-
-                        //if !rank_class_count.contains_key(&rank_class) {
-                        //    rank_class_count.insert(rank_class, 1);
-                        //} else {
-                        //    let cur_count = rank_class_count.get(rank_class);
-                        //    rank_class_count.insert(rank_class, cur_count+1);
-                        //}
+    // TODO: this is not really specific to this evaluation method. It could as well live in the library tests folder
+    // the reason it is here, is due to the internal representation hackage which got ditched
+    #[test]
+    fn evaluate_all_possible_5_card_combinations() {
+        let mut deck = Deck::new();
+        let mut cards : Vec<Card> = Vec::new();
+    
+        // this could be made faster, by creating a function that works on raw-card-representations and translating
+        // the deck cards into it
+        for _ in 0..52 {
+            let card = deck.draw();
+            cards.push(card);
+        }
+    
+        let mut rank_class_count : HashMap<HandRankClass, usize> = HashMap::new();
+        let mut rank_count : HashMap<HandRank, bool> = HashMap::new();
+    
+        // 2,598,960 unique poker hands
+        for i1 in 0..52 {
+            for i2 in (i1+1)..52 {
+                for i3 in (i2+1)..52 {
+                    for i4 in (i3+1)..52 {
+                        for i5 in (i4+1)..52 {
+                            let c1 = &cards[i1];
+                            let c2 = &cards[i2];
+                            let c3 = &cards[i3];
+                            let c4 = &cards[i4];
+                            let c5 = &cards[i5];
+    
+                            let rank = eval_5cards([c1, c2, c3, c4, c5]);
+                            let rank_class = hand_rank(rank); //TODO: is this a move?
+    
+                            // increment maps
+                            rank_count.entry(rank).or_insert(true);
+    
+                            let count = rank_class_count.entry(rank_class).or_insert(0);
+                            *count += 1;
+                        }
                     }
                 }
             }
         }
+    
+        // TODO: we might compare the numbers of expected combinations here or output them in a similar fashion
+        //assert_eq!(*rank_class_count.get(&HandRankClass::HighCard).unwrap(), 1277);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::OnePair).unwrap(), 2860);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::TwoPair).unwrap(), 858);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::ThreeOfAKind).unwrap(), 858);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::Straight).unwrap(), 10);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::Flush).unwrap(), 1277);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::FullHouse).unwrap(), 156);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::FourOfAKind).unwrap(), 156);
+        //assert_eq!(*rank_class_count.get(&HandRankClass::StraightFlush).unwrap(), 10);
+    
+        // there should be 7462 unique ranks, in accordance with the hand_rank function
+        assert_eq!(rank_count.len(), 7462);
     }
-
-    //assert_eq!(rank_class_count.get(HandRankClass::HighCard).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::OnePair).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::TwoPair).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::ThreeOfAKind).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::Straight).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::Flush).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::FullHouse).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::FourOfAKind).unwrap(), 0);
-    //assert_eq!(rank_class_count.get(HandRankClass::StraightFlush).unwrap(), 0);
-
-    // there should be 7462 unique ranks, according to the hand_rank function
-    //TODO: rank_count len == 7462
 }
+
