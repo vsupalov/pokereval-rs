@@ -3,21 +3,27 @@ use cards::card::{Card};
 use super::{HandRank};
 use super::utils::{card_to_deck_number};
 
-#[allow(dead_code)]
-pub fn find_fast(something: usize) -> usize {
-    let mut u : usize = something;
 
-    u += 0xe91aaa35;
-    u ^= u >> 16;
-    u += u << 8;
-    u ^= u >> 4;
-    let b = (u >> 8) & 0x1ff;
-    let a = (u + (u << 2)) >> 19;
-
-    a ^ (lookups::HASH_ADJUST[b] as usize)
+fn simulate_32bit_precision(u: usize) -> usize {
+    let mask = 0xffffffff;
+    u & mask
 }
 
-#[allow(dead_code)]
+// don't use this.
+pub fn find_fast(something: usize) -> usize {
+    let mut u = simulate_32bit_precision(something);
+
+    //well, this is awkward. The logic in this function relies on arithmetic overflows
+    u = simulate_32bit_precision(u + 0xe91aaa35);
+    u = simulate_32bit_precision(u ^ (u >> 16));
+    u = simulate_32bit_precision(u + (u << 8));
+    u = simulate_32bit_precision(u ^ (u >> 4));
+    let b = simulate_32bit_precision((u >> 8) & 0x1ff);
+    let a = simulate_32bit_precision((u + (u << 2)) >> 19);
+
+    simulate_32bit_precision(a ^ (lookups::HASH_ADJUST[b] as usize))
+}
+
 pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     let c1 = card_to_deck_number(cards[0]) as i32;
     let c2 = card_to_deck_number(cards[1]) as i32;
@@ -43,7 +49,7 @@ pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     lookups::HASH_VALUES[lookup] as HandRank
 }
 
-#[allow(dead_code)]
+// don't use this.
 pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
     let mut tmp;
     let mut best = 9999;
