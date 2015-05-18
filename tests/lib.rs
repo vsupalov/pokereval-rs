@@ -81,7 +81,6 @@ fn get_rank_of_hand_and_community_cards_panic() {
 }
 
 //TODO: as soon as both methods are expected to agree
-/*
 #[test]
 fn both_evaluation_methods_agree() {
     let mut deck = Deck::new();
@@ -99,4 +98,3 @@ fn both_evaluation_methods_agree() {
         assert_eq!(rank_original, rank_perfect);
     }
 }
-*/
