@@ -4,6 +4,7 @@ use cards::card::{Card};
 
 use super::{HandRank};
 use super::utils::{card_to_deck_number};
+use super::types::{InternalCardRepresentation};
 
 fn findit(key: usize) -> usize {
     let mut low = 0;
@@ -25,12 +26,13 @@ fn findit(key: usize) -> usize {
     panic!("No match found")
 }
 
-pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
-    let c1 = card_to_deck_number(cards[0]);
-    let c2 = card_to_deck_number(cards[1]);
-    let c3 = card_to_deck_number(cards[2]);
-    let c4 = card_to_deck_number(cards[3]);
-    let c5 = card_to_deck_number(cards[4]);
+type ICR = InternalCardRepresentation;
+pub fn eval_5cards_raw(cards: [&InternalCardRepresentation; 5]) -> HandRank {
+    let c1 = cards[0];
+    let c2 = cards[1];
+    let c3 = cards[2];
+    let c4 = cards[3];
+    let c5 = cards[4];
 
     let q : usize = ((c1 | c2 | c3 | c4 | c5) as usize) >> 16;
 
@@ -47,6 +49,16 @@ pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
         as usize;
     let lookup = findit(q);
     lookups::VALUES[lookup] as HandRank
+}
+
+pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
+    let c1 = card_to_deck_number(cards[0]);
+    let c2 = card_to_deck_number(cards[1]);
+    let c3 = card_to_deck_number(cards[2]);
+    let c4 = card_to_deck_number(cards[3]);
+    let c5 = card_to_deck_number(cards[4]);
+
+    eval_5cards_raw([&c1, &c2, &c3, &c4, &c5])
 }
 
 pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
@@ -75,26 +87,27 @@ mod tests {
     use std::collections::{HashMap};
 
     use cards::deck::{Deck};
-    use cards::card::{Card};
     use holdem::{HandRankClass};
 
     use super::super::{hand_rank}; //TODO this is kind of ugly
     use super::super::{HandRank};
 
-    use super::{eval_5cards};
+    use super::{eval_5cards_raw};
+    use super::super::utils::{card_to_deck_number};
+    use super::super::types::{InternalCardRepresentation};
 
     // TODO: this is not really specific to this evaluation method. It could as well live in the library tests folder
     // the reason it is here, is due to the internal representation hackage which got ditched
     #[test]
     fn evaluate_all_possible_5_card_combinations() {
         let mut deck = Deck::new();
-        let mut cards : Vec<Card> = Vec::new();
+        let mut cards : [InternalCardRepresentation; 52] = [0; 52];
     
         // this could be made faster, by creating a function that works on raw-card-representations and translating
         // the deck cards into it
-        for _ in 0..52 {
+        for i in 0..52 {
             let card = deck.draw();
-            cards.push(card);
+            cards[i] = card_to_deck_number(&card);
         }
     
         let mut rank_class_count : HashMap<HandRankClass, usize> = HashMap::new();
@@ -112,7 +125,7 @@ mod tests {
                             let c4 = &cards[i4];
                             let c5 = &cards[i5];
     
-                            let rank = eval_5cards([c1, c2, c3, c4, c5]);
+                            let rank = eval_5cards_raw([c1, c2, c3, c4, c5]);
                             // mark the rank in the map
                             rank_count.entry(rank).or_insert(true);
                         }
