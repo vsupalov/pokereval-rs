@@ -89,7 +89,7 @@ mod tests {
     use cards::deck::{Deck};
     use holdem::{HandRankClass};
 
-    use super::super::{hand_rank}; //TODO this is kind of ugly
+    use super::super::{hand_rank}; //TODO this super::super business is kind of ugly
     use super::super::{HandRank};
 
     use super::{eval_5cards_raw};
