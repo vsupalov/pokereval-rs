@@ -37,25 +37,18 @@ pub fn eval_for_player(player_cards: &HandCards, community_cards: &CommunityCard
     eval_7cards(cards)
 }
 
-pub fn hand_rank(val: HandRank) -> HandRankClass {
-    if val > 6185 {
-        return HandRankClass::HighCard        // 1277 high card
-    } else if val > 3325 {
-        return HandRankClass::OnePair         // 2860 one pair
-    } else if val > 2467 {
-        return HandRankClass::TwoPair         //  858 two pair
-    } else if val > 1609 {
-        return HandRankClass::ThreeOfAKind    //  858 three-kind
-    } else if val > 1599 {
-        return HandRankClass::Straight        //   10 straights
-    } else if val > 322 {
-        return HandRankClass::Flush           // 1277 flushes
-    } else if val > 166 {
-        return HandRankClass::FullHouse       //  156 full house
-    } else if val > 10 {
-        return HandRankClass::FourOfAKind     //  156 four-kind
-    } else {
-        HandRankClass::StraightFlush          //   10 straight-flushes
+pub fn hand_rank_to_class(val: &HandRank) -> HandRankClass {
+    match *val {
+        x if x > 6185 => HandRankClass::HighCard,
+        x if x > 3325 => HandRankClass::OnePair,
+        x if x > 2467 => HandRankClass::TwoPair,
+        x if x > 1609 => HandRankClass::ThreeOfAKind,
+        x if x > 1599 => HandRankClass::Straight,
+        x if x > 322  => HandRankClass::Flush,
+        x if x > 166  => HandRankClass::FullHouse,
+        x if x > 10   => HandRankClass::FourOfAKind,
+        x if x > 0    => HandRankClass::StraightFlush,
+        _             => panic!("Unexpected hand rank value!")
     }
 }
 

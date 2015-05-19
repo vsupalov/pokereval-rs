@@ -5,7 +5,7 @@ extern crate pokereval;
 use cards::card::{Card, Value, Suit};
 
 use holdem::{HandRankClass};
-use pokereval::{hand_rank};
+use pokereval::{hand_rank_to_class};
 
 use holdem::{HandCards, CommunityCards, CardSlot};
 
@@ -20,7 +20,7 @@ fn get_rank_of_5() {
     let cards = [&c1, &c2, &c3, &c4, &c5];
     let rank = pokereval::eval_5cards(cards);
 
-    assert_eq!(hand_rank(rank), HandRankClass::FourOfAKind);
+    assert_eq!(hand_rank_to_class(&rank), HandRankClass::FourOfAKind);
 }
 
 #[test]
@@ -36,7 +36,7 @@ fn get_rank_of_7() {
     let cards = [&c1, &c2, &c3, &c4, &c5, &c6, &c7];
     let rank = pokereval::eval_7cards(cards);
 
-    assert_eq!(hand_rank(rank), HandRankClass::FourOfAKind);
+    assert_eq!(hand_rank_to_class(&rank), HandRankClass::FourOfAKind);
 }
 
 
@@ -56,7 +56,7 @@ fn get_rank_of_hand_and_community_cards() {
     );
 
     let rank = pokereval::eval_for_player(&hand, &community);
-    assert_eq!(hand_rank(rank), HandRankClass::FourOfAKind);
+    assert_eq!(hand_rank_to_class(&rank), HandRankClass::FourOfAKind);
 }
 
 #[test]
@@ -76,5 +76,5 @@ fn get_rank_of_hand_and_community_cards_panic() {
     );
 
     let rank = pokereval::eval_for_player(&hand, &community);
-    assert_eq!(hand_rank(rank), HandRankClass::FourOfAKind);
+    assert_eq!(hand_rank_to_class(&rank), HandRankClass::FourOfAKind);
 }

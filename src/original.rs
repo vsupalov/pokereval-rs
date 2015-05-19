@@ -90,7 +90,7 @@ mod tests {
     use cards::card::{Card};
     use holdem::{HandRankClass};
 
-    use super::super::{hand_rank}; //TODO this super::super business is kind of ugly
+    use super::super::{hand_rank_to_class}; //TODO this super::super business is kind of ugly
     use super::super::{HandRank};
 
     use super::{eval_5cards_raw,eval_5cards};
@@ -137,7 +137,7 @@ mod tests {
 
         // count distinct ranks for each rank class
         for key in rank_count.keys() {
-            let rank_class = hand_rank(*key);
+            let rank_class = hand_rank_to_class(key);
 
             let count = rank_class_count.entry(rank_class).or_insert(0);
             *count += 1;
@@ -154,7 +154,7 @@ mod tests {
         assert_eq!(*rank_class_count.get(&HandRankClass::StraightFlush).unwrap(), 10);
     
         // this is a bit redundant
-        // there should be 7462 unique ranks, in accordance with the hand_rank function
+        // there should be 7462 unique ranks, in accordance with the hand_rank_to_class function
         assert_eq!(rank_count.len(), 7462);
     }
 
@@ -194,7 +194,7 @@ mod tests {
 
         // count distinct ranks for each rank class
         for key in rank_count.keys() {
-            let rank_class = hand_rank(*key);
+            let rank_class = hand_rank_to_class(key);
 
             let count = rank_class_count.entry(rank_class).or_insert(0);
             *count += 1;
@@ -211,7 +211,7 @@ mod tests {
         assert_eq!(*rank_class_count.get(&HandRankClass::StraightFlush).unwrap(), 10);
     
         // this is a bit redundant
-        // there should be 7462 unique ranks, in accordance with the hand_rank function
+        // there should be 7462 unique ranks, in accordance with the hand_rank_to_class function
         assert_eq!(rank_count.len(), 7462);
     }
 }
