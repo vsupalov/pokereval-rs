@@ -113,30 +113,33 @@ mod tests {
                             let c5 = &cards[i5];
     
                             let rank = eval_5cards([c1, c2, c3, c4, c5]);
-                            let rank_class = hand_rank(rank); //TODO: is this a move?
-    
-                            // increment maps
+                            // mark the rank in the map
                             rank_count.entry(rank).or_insert(true);
-    
-                            let count = rank_class_count.entry(rank_class).or_insert(0);
-                            *count += 1;
                         }
                     }
                 }
             }
         }
+
+        // count distinct ranks for each rank class
+        for key in rank_count.keys() {
+            let rank_class = hand_rank(*key);
+
+            let count = rank_class_count.entry(rank_class).or_insert(0);
+            *count += 1;
+        }
     
-        // TODO: we might compare the numbers of expected combinations here or output them in a similar fashion
-        //assert_eq!(*rank_class_count.get(&HandRankClass::HighCard).unwrap(), 1277);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::OnePair).unwrap(), 2860);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::TwoPair).unwrap(), 858);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::ThreeOfAKind).unwrap(), 858);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::Straight).unwrap(), 10);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::Flush).unwrap(), 1277);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::FullHouse).unwrap(), 156);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::FourOfAKind).unwrap(), 156);
-        //assert_eq!(*rank_class_count.get(&HandRankClass::StraightFlush).unwrap(), 10);
+        assert_eq!(*rank_class_count.get(&HandRankClass::HighCard).unwrap(), 1277);
+        assert_eq!(*rank_class_count.get(&HandRankClass::OnePair).unwrap(), 2860);
+        assert_eq!(*rank_class_count.get(&HandRankClass::TwoPair).unwrap(), 858);
+        assert_eq!(*rank_class_count.get(&HandRankClass::ThreeOfAKind).unwrap(), 858);
+        assert_eq!(*rank_class_count.get(&HandRankClass::Straight).unwrap(), 10);
+        assert_eq!(*rank_class_count.get(&HandRankClass::Flush).unwrap(), 1277);
+        assert_eq!(*rank_class_count.get(&HandRankClass::FullHouse).unwrap(), 156);
+        assert_eq!(*rank_class_count.get(&HandRankClass::FourOfAKind).unwrap(), 156);
+        assert_eq!(*rank_class_count.get(&HandRankClass::StraightFlush).unwrap(), 10);
     
+        // this is a bit redundant
         // there should be 7462 unique ranks, in accordance with the hand_rank function
         assert_eq!(rank_count.len(), 7462);
     }
