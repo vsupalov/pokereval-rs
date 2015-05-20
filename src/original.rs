@@ -2,7 +2,7 @@ use super::{lookups};
 
 use cards::card::{Card};
 
-use super::{HandRank};
+use holdem::{HandRank};
 use super::utils::{card_to_deck_number};
 use super::types::{InternalCardRepresentation};
 
@@ -88,10 +88,7 @@ mod tests {
 
     use cards::deck::{Deck};
     use cards::card::{Card};
-    use holdem::{HandRankClass};
-
-    use super::super::{hand_rank_to_class}; //TODO this super::super business is kind of ugly
-    use super::super::{HandRank};
+    use holdem::{HandRank, HandRankClass, hand_rank_to_class};
 
     use super::{eval_5cards_raw,eval_5cards};
     use super::super::utils::{card_to_deck_number};

@@ -10,9 +10,7 @@ pub mod utils;
 use cards::card::{Card};
 use holdem::{HandCards, CommunityCards};
 
-use holdem::{HandRankClass};
-
-pub type HandRank = u32;
+use holdem::{HandRank};
 
 pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     original::eval_5cards(cards)
@@ -35,21 +33,6 @@ pub fn eval_for_player(player_cards: &HandCards, community_cards: &CommunityCard
     ];
 
     eval_7cards(cards)
-}
-
-pub fn hand_rank_to_class(val: &HandRank) -> HandRankClass {
-    match *val {
-        x if x > 6185 => HandRankClass::HighCard,
-        x if x > 3325 => HandRankClass::OnePair,
-        x if x > 2467 => HandRankClass::TwoPair,
-        x if x > 1609 => HandRankClass::ThreeOfAKind,
-        x if x > 1599 => HandRankClass::Straight,
-        x if x > 322  => HandRankClass::Flush,
-        x if x > 166  => HandRankClass::FullHouse,
-        x if x > 10   => HandRankClass::FourOfAKind,
-        x if x > 0    => HandRankClass::StraightFlush,
-        _             => panic!("Unexpected hand rank value!")
-    }
 }
 
 //use cards::deck::{Deck};

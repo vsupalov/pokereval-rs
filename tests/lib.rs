@@ -5,7 +5,7 @@ extern crate pokereval;
 use cards::card::{Card, Value, Suit};
 
 use holdem::{HandRankClass};
-use pokereval::{hand_rank_to_class};
+use holdem::{hand_rank_to_class};
 
 use holdem::{HandCards, CommunityCards, CardSlot};
 
