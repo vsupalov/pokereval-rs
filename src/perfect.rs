@@ -46,13 +46,13 @@ pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     let lookup = find_fast(
         ((c1 & 0xff) * (c2 & 0xff) * (c3 & 0xff) * (c4 & 0xff) * (c5 & 0xff)) as usize
         );
-    lookups::HASH_VALUES[lookup] as HandRank
+    HAND_RANK_COUNT - (lookups::HASH_VALUES[lookup] as HandRank)
 }
 
 // don't use this.
 pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
     let mut tmp;
-    let mut best = 9999;
+    let mut best = 0;
     for ids in lookups::PERM_7.iter() {
         let subhand : [&Card; 5] = [
                 cards[ids[0] as usize],
@@ -63,7 +63,7 @@ pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
          ];
 
         tmp = eval_5cards(subhand);
-        if tmp < best {
+        if tmp > best {
             best = tmp;
         }
     }

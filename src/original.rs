@@ -26,8 +26,8 @@ fn findit(key: usize) -> usize {
     panic!("No match found")
 }
 
-type ICR = InternalCardRepresentation;
-pub fn eval_5cards_raw(cards: [&InternalCardRepresentation; 5]) -> HandRank {
+//this delivers a value (1 to 7462 inclusive), where 1 is the best
+pub fn eval_5cards_kev(cards: [&InternalCardRepresentation; 5]) -> HandRank {
     let c1 = cards[0];
     let c2 = cards[1];
     let c3 = cards[2];
@@ -51,6 +51,11 @@ pub fn eval_5cards_raw(cards: [&InternalCardRepresentation; 5]) -> HandRank {
     lookups::VALUES[lookup] as HandRank
 }
 
+pub fn eval_5cards_raw(cards: [&InternalCardRepresentation; 5]) -> HandRank {
+    let kev_rank = eval_5cards_kev(cards);
+    7461 - (kev_rank-1) as HandRank //let's change this to be (0 to 7461 inclusive), with 7461 being the best
+}
+
 pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     let c1 = card_to_deck_number(cards[0]);
     let c2 = card_to_deck_number(cards[1]);
@@ -63,7 +68,7 @@ pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
 
 pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
     let mut tmp;
-    let mut best = 9999;
+    let mut best = 0;
     for ids in lookups::PERM_7.iter() {
         let subhand : [&Card; 5] = [
                 cards[ids[0] as usize],
@@ -74,7 +79,7 @@ pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
          ];
 
         tmp = eval_5cards(subhand);
-        if tmp < best {
+        if tmp > best {
             best = tmp;
         }
     }
@@ -110,7 +115,7 @@ mod tests {
     
         let mut rank_class_count : HashMap<HandRankClass, usize> = HashMap::new();
         let mut rank_count : HashMap<HandRank, bool> = HashMap::new();
-    
+
         // 2,598,960 unique poker hands
         for i1 in 0..52 {
             for i2 in (i1+1)..52 {
@@ -124,6 +129,7 @@ mod tests {
                             let c5 = &cards[i5];
     
                             let rank = eval_5cards_raw([c1, c2, c3, c4, c5]);
+
                             // mark the rank in the map
                             rank_count.entry(rank).or_insert(true);
                         }
@@ -139,6 +145,10 @@ mod tests {
             let count = rank_class_count.entry(rank_class).or_insert(0);
             *count += 1;
         }
+
+        // this is a bit redundant
+        // there should be 7462 unique ranks, in accordance with the hand_rank_to_class function
+        assert_eq!(rank_count.len(), 7462);
     
         assert_eq!(*rank_class_count.get(&HandRankClass::HighCard).unwrap(), 1277);
         assert_eq!(*rank_class_count.get(&HandRankClass::OnePair).unwrap(), 2860);
@@ -149,10 +159,6 @@ mod tests {
         assert_eq!(*rank_class_count.get(&HandRankClass::FullHouse).unwrap(), 156);
         assert_eq!(*rank_class_count.get(&HandRankClass::FourOfAKind).unwrap(), 156);
         assert_eq!(*rank_class_count.get(&HandRankClass::StraightFlush).unwrap(), 10);
-    
-        // this is a bit redundant
-        // there should be 7462 unique ranks, in accordance with the hand_rank_to_class function
-        assert_eq!(rank_count.len(), 7462);
     }
 
     #[test]
@@ -167,7 +173,7 @@ mod tests {
     
         let mut rank_class_count : HashMap<HandRankClass, usize> = HashMap::new();
         let mut rank_count : HashMap<HandRank, bool> = HashMap::new();
-    
+
         // 2,598,960 unique poker hands
         for i1 in 0..52 {
             for i2 in (i1+1)..52 {
@@ -181,6 +187,7 @@ mod tests {
                             let c5 = &cards[i5];
     
                             let rank = eval_5cards([c1, c2, c3, c4, c5]);
+
                             // mark the rank in the map
                             rank_count.entry(rank).or_insert(true);
                         }
