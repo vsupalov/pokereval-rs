@@ -56,6 +56,48 @@ pub fn eval_5cards_raw(cards: [&InternalCardRepresentation; 5]) -> HandRank {
     7461 - (kev_rank-1) as HandRank //let's change this to be (0 to 7461 inclusive), with 7461 being the best
 }
 
+pub fn eval_6cards_raw(cards: [&InternalCardRepresentation; 6]) -> HandRank {
+    let mut tmp;
+    let mut best = 0;
+    for ids in lookups::PERM_6.iter() {
+        let subhand : [&InternalCardRepresentation; 5] = [
+                cards[ids[0] as usize],
+                cards[ids[1] as usize],
+                cards[ids[2] as usize],
+                cards[ids[3] as usize],
+                cards[ids[4] as usize]
+         ];
+
+        tmp = eval_5cards_raw(subhand);
+        if tmp > best {
+            best = tmp;
+        }
+    }
+
+    best
+}
+
+pub fn eval_7cards_raw(cards: [&InternalCardRepresentation; 7]) -> HandRank {
+    let mut tmp;
+    let mut best = 0;
+    for ids in lookups::PERM_7.iter() {
+        let subhand : [&InternalCardRepresentation; 5] = [
+                cards[ids[0] as usize],
+                cards[ids[1] as usize],
+                cards[ids[2] as usize],
+                cards[ids[3] as usize],
+                cards[ids[4] as usize]
+         ];
+
+        tmp = eval_5cards_raw(subhand);
+        if tmp > best {
+            best = tmp;
+        }
+    }
+
+    best
+}
+
 pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     let c1 = card_to_deck_number(cards[0]);
     let c2 = card_to_deck_number(cards[1]);
@@ -66,25 +108,27 @@ pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     eval_5cards_raw([&c1, &c2, &c3, &c4, &c5])
 }
 
+pub fn eval_6cards(cards: [&Card; 6]) -> HandRank {
+    let c1 = card_to_deck_number(cards[0]);
+    let c2 = card_to_deck_number(cards[1]);
+    let c3 = card_to_deck_number(cards[2]);
+    let c4 = card_to_deck_number(cards[3]);
+    let c5 = card_to_deck_number(cards[4]);
+    let c6 = card_to_deck_number(cards[5]);
+
+    eval_6cards_raw([&c1, &c2, &c3, &c4, &c5, &c6])
+}
+
 pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
-    let mut tmp;
-    let mut best = 0;
-    for ids in lookups::PERM_7.iter() {
-        let subhand : [&Card; 5] = [
-                cards[ids[0] as usize],
-                cards[ids[1] as usize],
-                cards[ids[2] as usize],
-                cards[ids[3] as usize],
-                cards[ids[4] as usize]
-         ];
+    let c1 = card_to_deck_number(cards[0]);
+    let c2 = card_to_deck_number(cards[1]);
+    let c3 = card_to_deck_number(cards[2]);
+    let c4 = card_to_deck_number(cards[3]);
+    let c5 = card_to_deck_number(cards[4]);
+    let c6 = card_to_deck_number(cards[5]);
+    let c7 = card_to_deck_number(cards[6]);
 
-        tmp = eval_5cards(subhand);
-        if tmp > best {
-            best = tmp;
-        }
-    }
-
-    best
+    eval_7cards_raw([&c1, &c2, &c3, &c4, &c5, &c6, &c7])
 }
 
 #[cfg(test)]
@@ -162,6 +206,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn evaluate_all_possible_5_card_combinations() {
         let mut deck = Deck::new();
         let mut cards : Vec<Card> = Vec::new();

@@ -16,6 +16,10 @@ pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
     original::eval_5cards(cards)
 }
 
+pub fn eval_6cards(cards: [&Card; 6]) -> HandRank {
+    original::eval_6cards(cards)
+}
+
 pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
     original::eval_7cards(cards)
 }
