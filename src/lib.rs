@@ -12,7 +12,7 @@ pub mod original;
 pub mod utils;
 
 use cards::card::{Card};
-use holdem::{HandCards, CommunityCards, HandRank};
+use holdem::{HandRank};
 use utils::{card_to_deck_number};
 
 /// Evalate a hand consisting of 5 cards. The cards are grouped in an array.
@@ -55,22 +55,6 @@ pub fn eval_7cards(cards: &[&Card; 7]) -> HandRank {
 
     let converted_cards = [&c1, &c2, &c3, &c4, &c5, &c6, &c7];
     original::eval_7cards_kev_array(&converted_cards)
-}
-
-//TODO: this is unused currently. Speculative functions don't pay off.
-//TODO: is panic an acceptable behaviour here? Be more verbose about this function expecting all cards to be present?
-pub fn eval_for_player(player_cards: &HandCards, community_cards: &CommunityCards) -> HandRank {
-    let cards : [&Card; 7] = [
-        &player_cards.0.expect_borrow(),
-        &player_cards.1.expect_borrow(),
-        &community_cards.0.expect_borrow(),
-        &community_cards.1.expect_borrow(),
-        &community_cards.2.expect_borrow(),
-        &community_cards.3.expect_borrow(),
-        &community_cards.4.expect_borrow()
-    ];
-
-    eval_7cards(&cards)
 }
 
 //TODO: this will be relevant, once the "perfect hash" method works
