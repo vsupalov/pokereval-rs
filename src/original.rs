@@ -4,7 +4,7 @@ use cards::card::{Card};
 
 use holdem::{HandRank};
 use super::utils::{card_to_deck_number};
-use super::types::{InternalCardRepresentation};
+use holdem::{CactusKevCard};
 
 fn findit(key: usize) -> usize {
     let mut low = 0;
@@ -26,8 +26,32 @@ fn findit(key: usize) -> usize {
     panic!("No match found")
 }
 
+pub fn eval_5cards_raw_unwrapped_behind_function(c1: &CactusKevCard, c2: &CactusKevCard, c3: &CactusKevCard, c4: &CactusKevCard, c5: &CactusKevCard) -> HandRank {
+    let kev_rank = eval_5cards_raw_unwrapped(c1, c2, c3, c4, c5);
+    7461 - (kev_rank-1) as HandRank //let's change this to be (0 to 7461 inclusive), with 7461 being the best
+}
+
+//TODO: test method
+pub fn eval_5cards_raw_unwrapped(c1: &CactusKevCard, c2: &CactusKevCard, c3: &CactusKevCard, c4: &CactusKevCard, c5: &CactusKevCard) -> HandRank {
+    let q : usize = ((c1 | c2 | c3 | c4 | c5) as usize) >> 16;
+
+    if (c1 & c2 & c3 & c4 & c5 & 0xf000) != 0 {
+        return lookups::FLUSHES[q] as HandRank;
+    }
+    let s = lookups::UNIQUE_5[q] as HandRank;
+    if s != 0 {
+        return s;
+    }
+
+    let q = 
+        ((c1 & 0xff) * (c2 & 0xff) * (c3 & 0xff) * (c4 & 0xff) * (c5 & 0xff))
+        as usize;
+    let lookup = findit(q);
+    lookups::VALUES[lookup] as HandRank
+}
+
 //this delivers a value (1 to 7462 inclusive), where 1 is the best
-pub fn eval_5cards_kev(cards: [&InternalCardRepresentation; 5]) -> HandRank {
+pub fn eval_5cards_kev(cards: [&CactusKevCard; 5]) -> HandRank {
     let c1 = cards[0];
     let c2 = cards[1];
     let c3 = cards[2];
@@ -51,16 +75,16 @@ pub fn eval_5cards_kev(cards: [&InternalCardRepresentation; 5]) -> HandRank {
     lookups::VALUES[lookup] as HandRank
 }
 
-pub fn eval_5cards_raw(cards: [&InternalCardRepresentation; 5]) -> HandRank {
+pub fn eval_5cards_raw(cards: [&CactusKevCard; 5]) -> HandRank {
     let kev_rank = eval_5cards_kev(cards);
     7461 - (kev_rank-1) as HandRank //let's change this to be (0 to 7461 inclusive), with 7461 being the best
 }
 
-pub fn eval_6cards_raw(cards: [&InternalCardRepresentation; 6]) -> HandRank {
+pub fn eval_6cards_raw(cards: [&CactusKevCard; 6]) -> HandRank {
     let mut tmp;
     let mut best = 0;
     for ids in lookups::PERM_6.iter() {
-        let subhand : [&InternalCardRepresentation; 5] = [
+        let subhand : [&CactusKevCard; 5] = [
                 cards[ids[0] as usize],
                 cards[ids[1] as usize],
                 cards[ids[2] as usize],
@@ -77,11 +101,11 @@ pub fn eval_6cards_raw(cards: [&InternalCardRepresentation; 6]) -> HandRank {
     best
 }
 
-pub fn eval_7cards_raw(cards: [&InternalCardRepresentation; 7]) -> HandRank {
+pub fn eval_7cards_raw(cards: [&CactusKevCard; 7]) -> HandRank {
     let mut tmp;
     let mut best = 0;
     for ids in lookups::PERM_7.iter() {
-        let subhand : [&InternalCardRepresentation; 5] = [
+        let subhand : [&CactusKevCard; 5] = [
                 cards[ids[0] as usize],
                 cards[ids[1] as usize],
                 cards[ids[2] as usize],
@@ -138,22 +162,22 @@ mod tests {
     use cards::deck::{Deck};
     use cards::card::{Card};
     use holdem::{HandRank, HandRankClass, hand_rank_to_class};
+    use holdem::{CactusKevCard};
 
     use super::{eval_5cards_raw,eval_5cards};
     use super::super::utils::{card_to_deck_number};
-    use super::super::types::{InternalCardRepresentation};
 
     // TODO: this is not really specific to this evaluation method. It could as well live in the library tests folder
     // the reason it is here, is due to the internal representation hackage which got ditched
     #[test]
     fn evaluate_all_possible_5_card_combinations_quick() {
-        let mut deck = Deck::new();
-        let mut cards : [InternalCardRepresentation; 52] = [0; 52];
+        let mut deck = Deck::new_unshuffled();
+        let mut cards : [CactusKevCard; 52] = [0; 52];
     
         // this could be made faster, by creating a function that works on raw-card-representations and translating
         // the deck cards into it
         for i in 0..52 {
-            let card = deck.draw();
+            let card = deck.draw().ok().unwrap();
             cards[i] = card_to_deck_number(&card);
         }
     
@@ -206,13 +230,12 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn evaluate_all_possible_5_card_combinations() {
-        let mut deck = Deck::new();
+        let mut deck = Deck::new_unshuffled();
         let mut cards : Vec<Card> = Vec::new();
     
         for _ in 0..52 {
-            let card = deck.draw();
+            let card = deck.draw().ok().unwrap();
             cards.push(card);
         }
     

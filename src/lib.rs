@@ -1,7 +1,6 @@
 extern crate cards;
 extern crate holdem;
 
-pub mod types;
 mod lookups;
 pub mod original;
 //mod perfect;

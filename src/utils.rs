@@ -1,5 +1,5 @@
 use super::lookups;
-use super::types::{InternalCardRepresentation};
+use holdem::{CactusKevCard};
 use cards::card::{Card, Value, Suit};
 
 //   +--------+--------+--------+--------+
@@ -10,7 +10,7 @@ use cards::card::{Card, Value, Suit};
 //   r = value of card (deuce=0,trey=1,four=2,five=3,...,ace=12)
 //   cdhs = suit of card
 //   b = bit turned on depending on value of card
-pub fn card_to_deck_number(card: &Card) -> InternalCardRepresentation {
+pub fn card_to_deck_number(card: &Card) -> CactusKevCard {
     let &Card(ref card_value, ref card_suit) = card;
 
     let value : u32  = match card_value {
