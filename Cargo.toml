@@ -1,6 +1,6 @@
 [package]
 name = "pokereval"
-version = "0.0.9"
+version = "0.1.0"
 authors = ["Vladislav Supalov <v.supalov@gmail.com>"]
 
 [lib]
@@ -13,5 +13,5 @@ git = "https://github.com/th4t/cards-rs.git"
 git = "https://github.com/th4t/holdem-rs.git"
 
 [dependencies]
-#cards = "0.1.0"
+#cards = "1.0.0"
 #holdem = "0.1.0"
