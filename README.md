@@ -15,3 +15,4 @@ git = "https://github.com/th4t/pokereval-rs.git"
 * [cards-rs](https://github.com/th4t/cards-rs)
 * [holdem-rs](https://github.com/th4t/holdem-rs)
 * **pokereval-rs**
+* [pokerlookup-rs](https://github.com/th4t/pokerlookup-rs)
