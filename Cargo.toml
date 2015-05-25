@@ -8,10 +8,8 @@ name = "pokereval"
 
 [dependencies.cards]
 git = "https://github.com/th4t/cards-rs.git"
+rev = "75666740f4c3a210f00cf5ebfd07e1cbed212152"
 
 [dependencies.holdem]
 git = "https://github.com/th4t/holdem-rs.git"
-
-[dependencies]
-#cards = "1.0.0"
-#holdem = "0.1.0"
+rev = "e0044c1906cd7e80f4158643960787c48741c89b"
