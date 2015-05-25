@@ -2,14 +2,16 @@ use super::lookups;
 use holdem::{CactusKevCard};
 use cards::card::{Card, Value, Suit};
 
-//   +--------+--------+--------+--------+
-//   |xxxbbbbb|bbbbbbbb|cdhsrrrr|xxpppppp|
-//   +--------+--------+--------+--------+
-//
-//   p = prime number of value (deuce=2,trey=3,four=5,five=7,...,ace=41)
-//   r = value of card (deuce=0,trey=1,four=2,five=3,...,ace=12)
-//   cdhs = suit of card
-//   b = bit turned on depending on value of card
+/// Converts a card to a cactusKevCard, which is a convenient binary representation:
+///
+///  +--------+--------+--------+--------+
+///  |xxxbbbbb|bbbbbbbb|cdhsrrrr|xxpppppp|
+///  +--------+--------+--------+--------+
+///
+///  p = prime number of value (deuce=2,trey=3,four=5,five=7,...,ace=41)
+///  r = value of card (deuce=0,trey=1,four=2,five=3,...,ace=12)
+///  cdhs = suit of card
+///  b = bit turned on depending on value of card
 pub fn card_to_deck_number(card: &Card) -> CactusKevCard {
     let &Card(ref card_value, ref card_suit) = card;
 

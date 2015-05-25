@@ -1,3 +1,8 @@
+//! pokereval-rs currently contains a single way of evaluating poker hands (5,6 or 7 cards)
+//! to a HandRank, which is a number from 0 to 7461 inclusive, the higher the better the hand.
+//! Inside the modules, there are more efficient methods that don't need to convert cards
+//! to internal representations first.
+
 extern crate cards;
 extern crate holdem;
 
@@ -7,22 +12,52 @@ pub mod original;
 pub mod utils;
 
 use cards::card::{Card};
-use holdem::{HandCards, CommunityCards};
+use holdem::{HandCards, CommunityCards, HandRank};
+use utils::{card_to_deck_number};
 
-use holdem::{HandRank};
+/// Evalate a hand consisting of 5 cards. The cards are grouped in an array.
+/// This is quite inefficient, due to the arrays that need to be created. But convenient.
+pub fn eval_5cards(cards: &[&Card; 5]) -> HandRank {
+    let c1 = card_to_deck_number(cards[0]);
+    let c2 = card_to_deck_number(cards[1]);
+    let c3 = card_to_deck_number(cards[2]);
+    let c4 = card_to_deck_number(cards[3]);
+    let c5 = card_to_deck_number(cards[4]);
 
-pub fn eval_5cards(cards: [&Card; 5]) -> HandRank {
-    original::eval_5cards(cards)
+    let converted_cards = [&c1, &c2, &c3, &c4, &c5];
+    original::eval_5cards_kev_array(&converted_cards)
 }
 
-pub fn eval_6cards(cards: [&Card; 6]) -> HandRank {
-    original::eval_6cards(cards)
+/// Evalate a hand consisting of 6 cards. The cards are grouped in an array.
+/// This is quite inefficient, due to the arrays that need to be created. But convenient.
+pub fn eval_6cards(cards: &[&Card; 6]) -> HandRank {
+    let c1 = card_to_deck_number(cards[0]);
+    let c2 = card_to_deck_number(cards[1]);
+    let c3 = card_to_deck_number(cards[2]);
+    let c4 = card_to_deck_number(cards[3]);
+    let c5 = card_to_deck_number(cards[4]);
+    let c6 = card_to_deck_number(cards[5]);
+
+    let converted_cards = [&c1, &c2, &c3, &c4, &c5, &c6];
+    original::eval_6cards_kev_array(&converted_cards)
 }
 
-pub fn eval_7cards(cards: [&Card; 7]) -> HandRank {
-    original::eval_7cards(cards)
+/// Evalate a hand consisting of 7 cards. The cards are grouped in an array.
+/// This is quite inefficient, due to the arrays that need to be created. But convenient.
+pub fn eval_7cards(cards: &[&Card; 7]) -> HandRank {
+    let c1 = card_to_deck_number(cards[0]);
+    let c2 = card_to_deck_number(cards[1]);
+    let c3 = card_to_deck_number(cards[2]);
+    let c4 = card_to_deck_number(cards[3]);
+    let c5 = card_to_deck_number(cards[4]);
+    let c6 = card_to_deck_number(cards[5]);
+    let c7 = card_to_deck_number(cards[6]);
+
+    let converted_cards = [&c1, &c2, &c3, &c4, &c5, &c6, &c7];
+    original::eval_7cards_kev_array(&converted_cards)
 }
 
+//TODO: this is unused currently. Speculative functions don't pay off.
 //TODO: is panic an acceptable behaviour here? Be more verbose about this function expecting all cards to be present?
 pub fn eval_for_player(player_cards: &HandCards, community_cards: &CommunityCards) -> HandRank {
     let cards : [&Card; 7] = [
@@ -35,8 +70,10 @@ pub fn eval_for_player(player_cards: &HandCards, community_cards: &CommunityCard
         &community_cards.4.expect_borrow()
     ];
 
-    eval_7cards(cards)
+    eval_7cards(&cards)
 }
+
+//TODO: this will be relevant, once the "perfect hash" method works
 
 //use cards::deck::{Deck};
 //use pokereval::{original, perfect}; // two evaluation methods
