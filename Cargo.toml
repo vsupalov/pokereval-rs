@@ -2,14 +2,14 @@
 name = "pokereval"
 version = "0.1.0"
 authors = ["Vladislav Supalov <v.supalov@gmail.com>"]
+keywords = ["cards", "poker"]
+description = "A Rust library for evaluating poker hands with 5 or 7 cards."
+license = "MIT"
+readme = "README.md"
 
 [lib]
 name = "pokereval"
 
-[dependencies.cards]
-git = "https://github.com/th4t/cards-rs.git"
-rev = "532e786e054d9e9482f8b774daf4436d9cc28349"
-
-[dependencies.holdem]
-git = "https://github.com/th4t/holdem-rs.git"
-rev = "61ca5990fd2bd296783c1f914ca8009ddd61a7e1"
+[dependencies]
+cards = "1.1.0"
+holdem = "0.1.0"
