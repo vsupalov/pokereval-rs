@@ -16,3 +16,6 @@ git = "https://github.com/th4t/pokereval-rs.git"
 * [holdem-rs](https://github.com/th4t/holdem-rs)
 * **pokereval-rs**
 * [pokerlookup-rs](https://github.com/th4t/pokerlookup-rs)
+
+## Cargo Bench
+Does not work right now in stable rust *1.5*. Don't expect it to work :)

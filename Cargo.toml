@@ -1,6 +1,6 @@
 [package]
 name = "pokereval"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Vladislav Supalov <v.supalov@gmail.com>"]
 keywords = ["cards", "poker"]
 description = "A Rust library for evaluating poker hands with 5 or 7 cards."
@@ -12,5 +12,5 @@ readme = "README.md"
 name = "pokereval"
 
 [dependencies]
-cards = "1.1.1"
-holdem = "0.1.1"
+cards = "1.1.2"
+holdem = "0.1.2"
